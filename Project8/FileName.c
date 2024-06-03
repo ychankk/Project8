@@ -1,3 +1,4 @@
+// 2-2 ~ 2-3
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,7 +17,7 @@ typedef struct Command {
     int duration;
     int repeat;
     int pid;
-    char type; // 'F' for FG, 'B' for BG
+    char type; 
     struct Command* next;
 } Command;
 
@@ -62,7 +63,7 @@ void print_queues() {
     LeaveCriticalSection(&cs);
 }
 
-// 명령어 실행 함수
+
 void execute_command(Command* cmd) {
     for (int i = 0; i < cmd->repeat; i++) {
         if (cmd->type == 'B') {
@@ -121,12 +122,12 @@ void execute_command(Command* cmd) {
     }
 }
 
-// 백그라운드 명령어 실행 쓰레드 함수
+
 DWORD WINAPI background_command(LPVOID arg) {
     Command* cmd = (Command*)arg;
     execute_command(cmd);
     EnterCriticalSection(&cs);
-    // 명령어 완료 후 DQ에서 제거
+    
     Command** indirect = &dq_head;
     while (*indirect) {
         if (*indirect == cmd) {
@@ -203,7 +204,7 @@ void parse_and_execute(char* line) {
             cmd->type = 'F';
             execute_command(cmd);
             EnterCriticalSection(&cs);
-            // 명령어 완료 후 DQ에서 제거
+            
             Command** indirect = &dq_head;
             while (*indirect) {
                 if (*indirect == cmd) {
@@ -222,7 +223,7 @@ void parse_and_execute(char* line) {
 
 DWORD WINAPI monitor(LPVOID arg) {
     while (1) {
-        Sleep(3000); // X초마다 상태 출력
+        Sleep(3000);
         print_queues();
     }
     return 0;
@@ -243,7 +244,7 @@ int main() {
         line[strcspn(line, "\n")] = '\0';
         printf("prompt> %s\n", line);
         parse_and_execute(line);
-        Sleep(1000); // Y초 동안 대기 (사용자 입력 모사)
+        Sleep(1000); 
     }
 
     fclose(file);
