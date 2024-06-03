@@ -243,7 +243,7 @@ int main() {
         line[strcspn(line, "\n")] = '\0';
         printf("prompt> %s\n", line);
         parse_and_execute(line);
-        Sleep(1000); // Y초 동안 대기 .(사용자 입력 모사)
+        Sleep(1000); // Y초 동안 대기 (사용자 입력 모사)
     }
 
     fclose(file);
